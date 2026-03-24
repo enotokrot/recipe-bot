@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>קשת טעמים — הערכת עלות מתכון</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600&family=Frank+Ruhl+Libre:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F7F5F0;
+    --surface: #FFFFFF;
+    --surface2: #F2EFE8;
+    --border: #E0DBD0;
+    --text: #1A1714;
+    --text2: #6B6560;
+    --text3: #9E9891;
+    --accent: #2D5016;
+    --accent-light: #E8F0DE;
+    --accent2: #8B3A10;
+    --accent2-light: #F5E8E0;
+    --warn: #854F0B;
+    --warn-light: #FDF0E0;
+    --ok: #1D6B40;
+    --ok-light: #E4F5EC;
+    --red: #A32D2D;
+    --red-light: #FCEAEA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1.5px solid var(--border);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-logo {
+    width: 44px;
+    height: 44px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 22px;
+    color: white;
+  }
+
+  .brand-name {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .brand-sub {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  .header-meta {
+    text-align: left;
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.8;
+  }
+
+  /* ── Recipe title ── */
+  .recipe-title {
+    margin-bottom: 2rem;
+  }
+
+  .recipe-title h1 {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .recipe-title .meta {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text2);
+    flex-wrap: wrap;
+  }
+
+  .recipe-title .meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* ── Summary cards ── */
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .card-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .card-value {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .card-value.green { color: var(--ok); }
+  .card-value.orange { color: var(--warn); }
+
+  .card-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 0.5px;
+    background: var(--border);
+  }
+
+  /* ── Table ── */
+  .table-wrap {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead tr {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text3);
+    text-align: right;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+
+  th:first-child { text-align: right; }
+  th.num { text-align: left; }
+
+  tbody tr {
+    border-bottom: 0.5px solid var(--border);
+    transition: background 0.12s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+
+  td {
+    padding: 12px 14px;
+    vertical-align: top;
+    color: var(--text);
+  }
+
+  td.num { text-align: left; }
+
+  .ing-name {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .ing-qty {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .arrow {
+    color: var(--text3);
+    font-size: 10px;
+  }
+
+  .qty-metric {
+    font-weight: 500;
+    color: var(--text2);
+  }
+
+  .product-name {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .product-alts {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text3);
+    line-height: 1.6;
+  }
+
+  .alt-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .alt-arrow { color: var(--text3); }
+
+  .save-badge {
+    display: inline-block;
+    background: var(--ok-light);
+    color: var(--ok);
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-right: 3px;
+  }
+
+  .cost-main {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .cost-of {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .pkg-price {
+    font-size: 13px;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+
+  .pkg-size {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    margin-right: 4px;
+  }
+
+  .badge-ok { background: var(--ok-light); color: var(--ok); }
+  .badge-warn { background: var(--warn-light); color: var(--warn); }
+  .badge-opt { background: var(--surface2); color: var(--text3); border: 0.5px solid var(--border); }
+  .badge-full { background: var(--accent-light); color: var(--accent); }
+
+  /* ── Totals ── */
+  .totals-section {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 1.5rem;
+  }
+
+  .totals-title {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    margin-bottom: 14px;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--text2);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .total-row:last-child { border-bottom: none; }
+
+  .total-row.main {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+
+  .total-row .label-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  .total-row .alt-costs {
+    margin-top: 8px;
+  }
+
+  .alt-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text2);
+    padding: 4px 0;
+  }
+
+  .alt-total .save {
+    font-size: 11px;
+    color: var(--ok);
+    margin-right: 8px;
+  }
+
+  /* ── Warnings ── */
+  .warnings {
+    background: var(--warn-light);
+    border: 0.5px solid #E8C98A;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 1.5rem;
+    font-size: 13px;
+  }
+
+  .warnings-title {
+    font-weight: 500;
+    color: var(--warn);
+    margin-bottom: 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .warning-item {
+    padding: 5px 0;
+    color: var(--text2);
+    border-bottom: 0.5px solid #E8C98A;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+
+  .warning-item:last-child { border-bottom: none; }
+
+  .w-icon { color: var(--warn); font-size: 12px; }
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 0.5px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: white; padding: 0; }
+    .no-print { display: none; }
+    .page { max-width: 100%; }
+    tbody tr:hover { background: none; }
+  }
+
+  @media (max-width: 640px) {
+    .summary-cards { grid-template-columns: repeat(2, 1fr); }
+    .header { flex-direction: column; gap: 12px; }
+    table { font-size: 12px; }
+    th, td { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-logo">ק</div>
+      <div>
+        <div class="brand-name">קשת טעמים</div>
+        <div class="brand-sub">הערכת עלות מתכון</div>
+      </div>
+    </div>
+    <div class="header-meta">
+      <div id="report-date"></div>
+      <div id="report-store">סניף: כל הסניפים</div>
+    </div>
+  </div>
+
+  <!-- Recipe Title -->
+  <div class="recipe-title">
+    <h1 id="recipe-name">The Best Homemade Lasagna</h1>
+    <div class="meta">
+      <span>⏱ הכנה: 15 דק׳</span>
+      <span>🍳 בישול: 90 דק׳</span>
+      <span>🍽 מנות: <span id="servings-count">8</span></span>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <div class="card">
+      <div class="card-label">מרכיבים</div>
+      <div class="card-value" id="total-ingredients">19</div>
+      <div class="card-sub">במתכון</div>
+    </div>
+    <div class="card">
+      <div class="card-label">נמצאו</div>
+      <div class="card-value green" id="matched-ingredients">18</div>
+      <div class="card-sub">התאמות</div>
+    </div>
+    <div class="card">
+      <div class="card-label">עלות קנייה</div>
+      <div class="card-value" id="shopping-total">₪248</div>
+      <div class="card-sub">אריזות שלמות</div>
+    </div>
+    <div class="card">
+      <div class="card-label">למנה</div>
+      <div class="card-value green" id="per-serving">₪31</div>
+      <div class="card-sub">מתוך 8 מנות</div>
+    </div>
+  </div>
+
+  <!-- Meat Sauce Section -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">רוטב בשר</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%">מרכיב</th>
+            <th style="width:30%">מוצר</th>
+            <th class="num" style="width:13%">כמות מטרית</th>
+            <th class="num" style="width:13%">עלות מתכון</th>
+            <th class="num" style="width:22%">מחיר אריזה</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="ing-name">שמן זית</div>
+              <div class="ing-qty">2 tsp <span class="arrow">→</span> <span class="qty-metric">10 מ"ל</span></div>
+            </td>
+            <td>
+              <div class="product-name">שמן זית כתית מעולה</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> שמן זית לחיץ 280 מ"ל — ₪18.90</div>
+                <div class="alt-item"><span class="alt-arrow">↳</span> שמן קנולה תומר 1 ל׳ — ₪10.90</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">10 מ"ל</div></td>
+            <td class="num">
+              <div class="cost-main">₪0.74</div>
+              <div class="cost-of">מתוך ₪36.90</div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪36.90</div>
+              <div class="pkg-size">500 מ"ל</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">בקר טחון</div>
+              <div class="ing-qty">1 lb <span class="arrow">→</span> <span class="qty-metric">450 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">טחון בקר 1 ק"ג</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> בשר בקר טחון 1 ק"ג — ₪48.90</div>
+                <div class="alt-item"><span class="alt-arrow">↳</span> <span class="save-badge">חסכון ₪0</span> טחון בקר מבשר טרי — ₪39.90/ק"ג</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">450 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪39.90</div>
+              <div class="cost-of"><span class="badge badge-full">אריזה שלמה</span></div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪39.90</div>
+              <div class="pkg-size">1 ק"ג</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">בצל</div>
+              <div class="ing-qty">½ בינוני <span class="arrow">→</span> <span class="qty-metric">75 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">בצל יבש</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> בצל ירוק — ₪5.90</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">75 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪1.04</div>
+              <div class="cost-of">מתוך ₪6.90/ק"ג</div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪6.90/ק"ג</div>
+              <div class="pkg-size">משקל</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">פלפל צבעוני</div>
+              <div class="ing-qty">½ גדול <span class="arrow">→</span> <span class="qty-metric">100 גר <span class="badge badge-warn">משוער</span></span></div>
+            </td>
+            <td>
+              <div class="product-name">פלפל צהוב</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> פלפל אדום / ירוק — ₪10.90/ק"ג</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">100 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪1.09</div>
+              <div class="cost-of">מתוך ₪10.90/ק"ג</div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪10.90/ק"ג</div>
+              <div class="pkg-size">משקל</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">שום</div>
+              <div class="ing-qty">2 שיניים <span class="arrow">→</span> <span class="qty-metric">10 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">שיני שום קלופים 170 גר</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> שום כתוש יכין — ₪14.90</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">10 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪0.88</div>
+              <div class="cost-of">מתוך ₪14.90</div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪14.90</div>
+              <div class="pkg-size">170 גר</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">רוטב עגבניות</div>
+              <div class="ing-qty">28 oz <span class="arrow">→</span> <span class="qty-metric">794 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">רוטב עגבניות מתובל</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> <span class="save-badge">חסכון ₪5</span> רוטב עגבניות אסטוריה — ₪9.90</div>
+                <div class="alt-item"><span class="alt-arrow">↳</span> רוטב עגבניות קינטו — ₪13.90</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">794 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪14.90</div>
+              <div class="cost-of"><span class="badge badge-full">אריזה שלמה</span></div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪14.90</div>
+              <div class="pkg-size">260 גר</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">רסק עגבניות</div>
+              <div class="ing-qty">3 oz <span class="arrow">→</span> <span class="qty-metric">85 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">רסק עגבניות 100 גר</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> רסק עגבניות מרוכז 400 גר — ₪4.90</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">85 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪3.90</div>
+              <div class="cost-of"><span class="badge badge-full">אריזה שלמה</span></div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪3.90</div>
+              <div class="pkg-size">100 גר</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">עגבניות מרוסקות</div>
+              <div class="ing-qty">14 oz <span class="arrow">→</span> <span class="qty-metric">397 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">עגבניות מרוסקות דק</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> <span class="save-badge">חסכון ₪1</span> עגבניות מרוסקות אריגי — ₪11.90</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">397 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪12.90</div>
+              <div class="cost-of"><span class="badge badge-full">אריזה שלמה</span></div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪12.90</div>
+              <div class="pkg-size">700 גר</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">אורגנו</div>
+              <div class="ing-qty">2 tbsp טרי <span class="arrow">→</span> <span class="qty-metric">5 גר יבש</span></div>
+            </td>
+            <td>
+              <div class="product-name">אורגנו 10 גר</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> אורגנו 60 גר — ₪16.90</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">5 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪4.35</div>
+              <div class="cost-of">מתוך ₪8.70</div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪8.70</div>
+              <div class="pkg-size">10 גר</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">פטרוזיליה</div>
+              <div class="ing-qty">¼ cup <span class="arrow">→</span> <span class="qty-metric">15 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">דורות פטרוזיליה קצוצה</div>
+            </td>
+            <td class="num"><div class="cost-main">15 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪2.34</div>
+              <div class="cost-of">מתוך ₪10.90</div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪10.90</div>
+              <div class="pkg-size">70 גר</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">תיבול איטלקי</div>
+              <div class="ing-qty">1 tbsp <span class="arrow">→</span> <span class="qty-metric">8 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">תיבול איטלקי 60 גר</div>
+            </td>
+            <td class="num"><div class="cost-main">8 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪1.99</div>
+              <div class="cost-of">מתוך ₪14.90</div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪14.90</div>
+              <div class="pkg-size">60 גר</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">אבקת שום</div>
+              <div class="ing-qty">1 pinch <span class="arrow">→</span> <span class="qty-metric">0.5 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">אבקת שום 50 גר</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> <span class="save-badge">חסכון ₪4</span> שום גבישי 20 גר — ₪2.90</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">0.5 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪5.90</div>
+              <div class="cost-of"><span class="badge badge-full">אריזה שלמה</span></div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪5.90</div>
+              <div class="pkg-size">50 גר</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">חומץ יין</div>
+              <div class="ing-qty">1 tbsp <span class="arrow">→</span> <span class="qty-metric">15 מ"ל</span></div>
+            </td>
+            <td>
+              <div class="product-name">חומץ יין לבן 5% 500 מ"ל</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> חומץ יין אדום — ₪14.50</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">15 מ"ל</div></td>
+            <td class="num">
+              <div class="cost-main">₪0.44</div>
+              <div class="cost-of">מתוך ₪14.50</div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪14.50</div>
+              <div class="pkg-size">500 מ"ל</div>
+            </td>
+          </tr>
+          <tr style="opacity:0.6">
+            <td>
+              <div class="ing-name">סוכר <span class="badge badge-opt">אופציונלי</span></div>
+              <div class="ing-qty">1 tbsp <span class="arrow">→</span> <span class="qty-metric">12 גר</span></div>
+            </td>
+            <td><div class="product-name">סוכר לבן</div></td>
+            <td class="num"><div class="cost-main" style="color:var(--text3)">12 גר</div></td>
+            <td class="num"><div class="cost-main" style="color:var(--text3)">—</div></td>
+            <td class="num"><div class="pkg-price" style="color:var(--text3)">לא נכלל</div></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">מלח</div>
+              <div class="ing-qty">לפי טעם <span class="arrow">→</span> <span class="qty-metric">3 גר</span></div>
+            </td>
+            <td><div class="product-name">מלח הים אדום 500 גר</div></td>
+            <td class="num"><div class="cost-main">3 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪0.05</div>
+              <div class="cost-of">מתוך ₪7.90</div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪7.90</div>
+              <div class="pkg-size">500 גר</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Assembly Section -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-label">הרכבה</span>
+      <div class="section-line"></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%">מרכיב</th>
+            <th style="width:30%">מוצר</th>
+            <th class="num" style="width:13%">כמות מטרית</th>
+            <th class="num" style="width:13%">עלות מתכון</th>
+            <th class="num" style="width:22%">מחיר אריזה</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="ing-name">לזניה יבשה</div>
+              <div class="ing-qty">½ lb <span class="arrow">→</span> <span class="qty-metric">225 גר · 9 דפים</span></div>
+            </td>
+            <td>
+              <div class="product-name">דפי לזניה אריגי 500 גר</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> <span class="save-badge">חסכון ₪2</span> פרפקטו לזניה 500 גר — ₪14.90</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">225 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪16.90</div>
+              <div class="cost-of"><span class="badge badge-full">אריזה שלמה</span></div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪16.90</div>
+              <div class="pkg-size">500 גר</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">גבינת ריקוטה</div>
+              <div class="ing-qty">15 oz <span class="arrow">→</span> <span class="qty-metric">425 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">גבינת ריקוטה</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> גבינה ריקוטה פרסקה — ₪69/ק"ג</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">425 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪20.83</div>
+              <div class="cost-of">מתוך ₪49/ק"ג</div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪49/ק"ג</div>
+              <div class="pkg-size">משקל</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">גבינת מוצרלה</div>
+              <div class="ing-qty">1½ lb <span class="arrow">→</span> <span class="qty-metric">680 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">גבינת מוצרלה מגורדת</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> מוצרלה — ₪45/ק"ג</div>
+                <div class="alt-item"><span class="alt-arrow">↳</span> מוצרלה במים — ₪89/ק"ג</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">680 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪36.90</div>
+              <div class="cost-of"><span class="badge badge-full">אריזה שלמה</span></div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪36.90</div>
+              <div class="pkg-size">500 גר</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ing-name">גבינת פרמזן</div>
+              <div class="ing-qty">¼ lb <span class="arrow">→</span> <span class="qty-metric">113 גר</span></div>
+            </td>
+            <td>
+              <div class="product-name">גבינת פרמזן מגורדת 90 גר</div>
+              <div class="product-alts">
+                <div class="alt-item"><span class="alt-arrow">↳</span> פרמזן ברונזה 180 גר — ₪21.90</div>
+              </div>
+            </td>
+            <td class="num"><div class="cost-main">113 גר</div></td>
+            <td class="num">
+              <div class="cost-main">₪18.90</div>
+              <div class="cost-of"><span class="badge badge-full">אריזה שלמה</span></div>
+            </td>
+            <td class="num">
+              <div class="pkg-price">₪18.90</div>
+              <div class="pkg-size">90 גר</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Totals -->
+  <div class="totals-section">
+    <div class="totals-title">סיכום עלויות</div>
+    <div class="total-row">
+      <span>עלות שימוש בפועל (חלקי אריזות)</span>
+      <span>₪197.11</span>
+    </div>
+    <div class="total-row">
+      <span>סה"כ קניה (אריזות שלמות)</span>
+      <span>₪248.70</span>
+    </div>
+    <div class="total-row main">
+      <div>
+        <div>סה"כ משוער</div>
+        <div class="label-sub">8 מנות · ₪31.09 למנה</div>
+      </div>
+      <span>₪248.70</span>
+    </div>
+    <div style="margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">חלופות לחיסכון</div>
+      <div class="alt-total">
+        <span>עם בשר בקר טחון רגיל (₪39.90)</span>
+        <span><span class="save">חסכון ₪0</span> ₪248.70</span>
+      </div>
+      <div class="alt-total">
+        <span>עם רוטב עגבניות אסטוריה (₪9.90)</span>
+        <span><span class="save">חסכון ₪5</span> ₪243.70</span>
+      </div>
+      <div class="alt-total">
+        <span>עם פרמזן ברונזה (₪21.90)</span>
+        <span><span class="save">חסכון ₪3</span> ₪245.70</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Warnings -->
+  <div class="warnings">
+    <div class="warnings-title">⚠ שים לב</div>
+    <div class="warning-item">
+      <span class="w-icon">⚠</span>
+      <span><strong>פלפל צבעוני</strong> — משקל משוער (100 גר לחצי פלפל גדול). המחיר בפועל תלוי בגודל.</span>
+    </div>
+    <div class="warning-item">
+      <span class="w-icon">⚠</span>
+      <span><strong>רוטב עגבניות 28 oz</strong> — המתכון דורש 794 גר אך האריזה הנפוצה 260 גר. ייתכן שתצטרך 3 אריזות (₪44.70).</span>
+    </div>
+    <div class="warning-item">
+      <span class="w-icon">ℹ</span>
+      <span><strong>סוכר</strong> — מרכיב אופציונלי, לא נכלל בחישוב.</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>נוצר על ידי Recipe Price Bot · קשת טעמים</span>
+    <span id="footer-date"></span>
+  </div>
+
+</div>
+
+<script>
+  const now = new Date();
+  const fmt = new Intl.DateTimeFormat('he-IL', {day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  document.getElementById('report-date').textContent = fmt.format(now);
+  document.getElementById('footer-date').textContent = fmt.format(now);
+</script>
+</body>
+</html>

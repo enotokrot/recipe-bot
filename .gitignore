@@ -1,0 +1,7 @@
+.env
+prices.db
+price_cache/
+__pycache__/
+*.pyc
+venv/
+.DS_Store
